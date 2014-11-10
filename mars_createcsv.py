@@ -15,8 +15,8 @@ from pyquery import PyQuery as pq # pip install pyquery
 print sys.argv[0], 'is running ...'
 
 # Dictionary of reports to be processed
-# reports = {'R04':[],'R06 LC_Subjects':[], 'R07 LC_Subjects':[], 'R13':[], 'R14':[], 'R25':[]} # Six original project reports
- reports = {'R00':[], 'R03_C1XX':[], 'R06 Series':[], 'R09 LC_Subjects': [], 'R11':[], 'R14':[], 'R39':[]} # Test reports for November 2014
+##reports = {'R04':[],'R06 LC_Subjects':[], 'R07 LC_Subjects':[], 'R13':[], 'R14':[], 'R25':[]} # Six original project reports
+reports = {'R00':[], 'R03_C1XX':[], 'R06 Series':[], 'R09 LC_Subjects': [], 'R11':[], 'R14':[], 'R39':[]} # Test reports for November 2014
 
 # Locate most recent reports
 base_url = 'http://lms01.harvard.edu/mars-reports/'
@@ -123,6 +123,7 @@ for report, lines in reports.items():
                         for line in lines:
                                 if float(line[5][:-1]) >= 90 or float(line[9][:-1]) >= 90: # For 90% or greater matches
                                         del line[0] # Remove BSLW row number
+                                        line += ['','',''] # Add blank ('Assigned To', 'Notes', and 'For Amy') columns
                                         filtered_lines.append(line)
                 elif report.startswith('R03_C1XX'):
                         # Keep only rows with changes to 010 or 1XX fields; ignore indicator (and tag?) changes
@@ -147,7 +148,9 @@ for report, lines in reports.items():
                                                 del line[1]
                                                 del changed_lines[index + 1][3]
                                                 del changed_lines[index + 1][1]
+                                                line += ['','',''] # Add blank ('Assigned To', 'Notes', and 'For Amy') columns
                                                 filtered_lines.append(line)
+                                                changed_lines[index + 1] += ['','',''] # Add blank ('Assigned To', 'Notes', and 'For Amy') columns
                                                 filtered_lines.append(changed_lines[index + 1])
                 elif report.startswith('R04'):
                         # Keep only the 010 and the highlighted changed field
@@ -218,7 +221,7 @@ for report, lines in reports.items():
                 else: 
                         if lines[0][1] == 'Old': # For summary (e.g. Old/New) reports
                         # TO DO: Should old/new rows be on the same row or separate rows? (Currently separate.)
-                                filtered_lines.append(['Row No','Bib No', 'Old/New','Tag','Ind','Field Data','Assigned To','Notes','For Amy']) # Add header
+                                filtered_lines.append(['Bib No', 'Old/New','Tag','Ind','Field Data','Assigned To','Notes','For Amy']) # Add header
                                 for line_index, line in enumerate(lines):
                                         if line[0] is None:
                                                 del line[0]
