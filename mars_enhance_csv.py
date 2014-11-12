@@ -22,20 +22,23 @@ for file in glob.glob('*.csv'):
     with open(file, 'rb') as mars_csv:
         reader = csv.reader(mars_csv)
         bib_row = ''
-        for index, row in enumerate(reader):
-            if index == 0:
-                if 'Bib No' in row[0]: # Check column 1
-                    bib_row = 0
-                elif 'Bib No' in row[1]: # Check column 2
-                    bib_row = 1
-            else:
-                try:
-                    if ',' in row[bib_row]: # Get only first bib number if there are multiple ones (e.g., in R00)
-                        bib_dict.setdefault(row[bib_row].split(',')[0], None)
-                    else: # Otherwise, get the single bib number
-                        bib_dict.setdefault(row[bib_row], None)
-                except:
-                    pass
+        report_no = file[:4].replace('_','')
+
+        if report_no not in no_enhance_reports: # Only enhance reports that can be enhanced
+            for index, row in enumerate(reader):
+                if index == 0:
+                    if 'Bib No' in row[0]: # Check column 1
+                        bib_row = 0
+                    elif 'Bib No' in row[1]: # Check column 2
+                        bib_row = 1
+                else:
+                    try:
+                        if ',' in row[bib_row]: # Get only first bib number if there are multiple ones (e.g., in R00)
+                            bib_dict.setdefault(row[bib_row].split(',')[0], None)
+                        else: # Otherwise, get the single bib number
+                            bib_dict.setdefault(row[bib_row], None)
+                    except:
+                        pass
 
 # Get data from HOLLIS Presto API
 # Current settings: LDR 06 (type of record), 008 35-37 (language code), and sublibraries and collection codes
@@ -55,7 +58,9 @@ for bib, fields in bib_dict.items(): # bib, fields as key, value
         for (i, j) in zip(own, collection): # Combine own field and collection code and format as a text string
             libraries.append( i + ' (' + j + ')')
         libraries = '; '.join(libraries)
-        bib_dict[bib] = [ldr06, language, libraries] # Add HOLLIS data to dictionary of bib numbers
+        bib_dict[bib] = [ldr06, language, libraries] # Add HOLLIS data to dictionary of bib numbers      
+    else:
+        bib_dict[bib] = ['','','']
     time.sleep(1)
 
 # Add HOLLIS data to CSV files
@@ -74,7 +79,7 @@ for file in glob.glob('*.csv'):
                     row[0] = row[0].replace('"', '')
                     row[:-3] += ['LDR 06','Language','Libraries']
                     enhanced_rows.append(row)
-                elif row[0] in bib_dict and bib_dict[row[0]] != None: # Check first column
+                elif row[0] in bib_dict and bib_dict[row[0]] != '': # Check first column
                     row[:-3] += bib_dict[row[0]]
                     if report_no in music_reports: # For music reports, check for LDR 06 c, d, or j 
                         if bib_dict[row[0]][0] == 'c' or bib_dict[row[0]][0] == 'd' or bib_dict[row[0]][0] == 'j': 
@@ -83,13 +88,15 @@ for file in glob.glob('*.csv'):
                             enhanced_rows.append(row) # Put in non-music report
                     else:
                         enhanced_rows.append(row)
-                elif row[1] in bib_dict and bib_dict[row[1]] != None: # Check second column
+                elif row[1] in bib_dict and bib_dict[row[1]] != '': # Check second column
                     row[:-3] += bib_dict[row[1]]
                     if report_no in music_reports: # For music reports, check for LDR 06 c, d, or j
                         if bib_dict[row[1]][0] == 'c' or bib_dict[row[1]][0] == 'd' or bib_dict[row[1]][0] == 'j':
                             music_rows.append(row) # Put in music report
                         else:
                             enhanced_rows.append(row) # Put in non-music report
+                    else:
+                        enhanced_rows.append(row)
                 else:
                     row[:-3] += ['','','']
                     enhanced_rows.append(row)
@@ -106,16 +113,20 @@ for file in glob.glob('*.csv'):
                     else:
                         enhanced_rows.append(row)
 
-        enhanced_dict[file[:-4] + '_enhanced.csv'] = enhanced_rows # Create enhanced report
+        if enhanced_rows or music_rows or no_replace_rows:
+            enhanced_dict[file[:-4] + '_enhanced.csv'] = enhanced_rows # Create enhanced report
 
-        if music_rows: # Create music report
-            music_rows.insert(0, enhanced_rows[0])
-            enhanced_dict[file[:-4] + '_enhanced_music.csv'] = music_rows
+            if music_rows: # Create music report
+                music_rows.insert(0, enhanced_rows[0])
+                enhanced_dict[file[:-4] + '_enhanced_music.csv'] = music_rows
 
-        if no_replace_rows: # Create music report
-            no_replace_rows.insert(0, enhanced_rows[0])
-            enhanced_dict[file[:-4] + '_enhanced_noreplace.csv'] = no_replace_rows
+            if no_replace_rows: # Create music report
+                no_replace_rows.insert(0, enhanced_rows[0])
+                enhanced_dict[file[:-4] + '_enhanced_noreplace.csv'] = no_replace_rows
             # TO DO: Row numbers are not correct for separated reports; this should be fixed if it matters to the processing team
+        else:
+            print file, 'was not enhanced'
+                
             
 # Create CSV files for enhanced reports
 for csv_file, csv_data in enhanced_dict.items():
