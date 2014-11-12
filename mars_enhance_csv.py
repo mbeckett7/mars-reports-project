@@ -75,23 +75,32 @@ for file in glob.glob('*.csv'):
 
         if report_no not in no_enhance_reports: # Only enhance reports that can be enhanced
             for index, row in enumerate(reader):
+                if ',' in row[0]:
+                    compare_col = row[0].split(',')[0]
+                else:
+                    compare_col = row[0]
+                if ',' in row[1]:
+                    compare_col_2 = row[1].split(',')[0]
+                else:
+                    compare_col_2 = row[1]
+                    
                 if index == 0: # Get header row
                     row[0] = row[0].replace('"', '')
                     row[:-3] += ['LDR 06','Language','Libraries']
                     enhanced_rows.append(row)
-                elif row[0] in bib_dict and bib_dict[row[0]] != '': # Check first column
-                    row[:-3] += bib_dict[row[0]]
+                elif compare_col in bib_dict and bib_dict[compare_col] != '': # Check first column
+                    row[:-3] += bib_dict[compare_col]
                     if report_no in music_reports: # For music reports, check for LDR 06 c, d, or j 
-                        if bib_dict[row[0]][0] == 'c' or bib_dict[row[0]][0] == 'd' or bib_dict[row[0]][0] == 'j': 
+                        if bib_dict[compare_col][0] == 'c' or bib_dict[compare_col][0] == 'd' or bib_dict[compare_col][0] == 'j': 
                             music_rows.append(row) # Put in music report
                         else:
                             enhanced_rows.append(row) # Put in non-music report
                     else:
                         enhanced_rows.append(row)
-                elif row[1] in bib_dict and bib_dict[row[1]] != '': # Check second column
-                    row[:-3] += bib_dict[row[1]]
+                elif compare_col_2 in bib_dict and bib_dict[compare_col_2] != '': # Check second column
+                    row[:-3] += bib_dict[compare_col_2]
                     if report_no in music_reports: # For music reports, check for LDR 06 c, d, or j
-                        if bib_dict[row[1]][0] == 'c' or bib_dict[row[1]][0] == 'd' or bib_dict[row[1]][0] == 'j':
+                        if bib_dict[compare_col_2][0] == 'c' or bib_dict[compare_col_2][0] == 'd' or bib_dict[compare_col_2][0] == 'j':
                             music_rows.append(row) # Put in music report
                         else:
                             enhanced_rows.append(row) # Put in non-music report
