@@ -39,21 +39,23 @@ for file in glob.glob('*.csv'):
 
 # Get data from HOLLIS Presto API
 # Current settings: LDR 06 (type of record), 008 35-37 (language code), and sublibraries and collection codes
-print 'Waiting for Presto API to process', len(bib_dict), 'records ...'
+if len(bib_dict) > 0:
+    print 'Waiting for Presto API to process', len(bib_dict), 'records ...'
 for bib, fields in bib_dict.items(): # bib, fields as key, value
     libraries = []
     marc_url = 'http://webservices.lib.harvard.edu/rest/marc/hollis/' + bib
     presto = requests.get(marc_url)
     marc_xml = presto.content.replace('<record xmlns="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim   http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">','<record>')
     marc_record = html.fromstring(marc_xml)
-    ldr06 = marc_record.xpath('//leader/text()')[0][6] # Get LDR byte 06 (type of record)
-    language = marc_record.xpath('//controlfield[@tag="008"]/text()')[0][35:38] # Get 008 bytes 35-37 (language code)
-    own = marc_record.xpath('//datafield[@tag="OWN"]/subfield/text()') # Get list of OWN (holding library) fields
-    collection = marc_record.xpath('//datafield[@tag="852"]/subfield[@code="c"]/text()') # Get collection code from 852 $c
-    for (i, j) in zip(own, collection): # Combine own field and collection code and format as a text string
-        libraries.append( i + ' (' + j + ')')
-    libraries = '; '.join(libraries)
-    bib_dict[bib] = [ldr06, language, libraries] # Add HOLLIS data to dictionary of bib numbers
+    if marc_record.xpath('//leader/text()'):
+        ldr06 = marc_record.xpath('//leader/text()')[0][6] # Get LDR byte 06 (type of record)
+        language = marc_record.xpath('//controlfield[@tag="008"]/text()')[0][35:38] # Get 008 bytes 35-37 (language code)
+        own = marc_record.xpath('//datafield[@tag="OWN"]/subfield/text()') # Get list of OWN (holding library) fields
+        collection = marc_record.xpath('//datafield[@tag="852"]/subfield[@code="c"]/text()') # Get collection code from 852 $c
+        for (i, j) in zip(own, collection): # Combine own field and collection code and format as a text string
+            libraries.append( i + ' (' + j + ')')
+        libraries = '; '.join(libraries)
+        bib_dict[bib] = [ldr06, language, libraries] # Add HOLLIS data to dictionary of bib numbers
     time.sleep(1)
 
 # Add HOLLIS data to CSV files
@@ -98,7 +100,9 @@ for file in glob.glob('*.csv'):
                     enhanced_rows.append(row)
                 else:
                     if row[1] == 'No replacement found':
-                        no_replace_rows.append(row)
+                        no_replace_rows.append(enhanced_rows[-1]) # Add previous (i.e., Old) row to no replacement report
+                        del enhanced_rows[-1] # Delete Old row from report with replacement rows
+                        no_replace_rows.append(row) # Add current (i.e., New) row to no replacement report
                     else:
                         enhanced_rows.append(row)
 
@@ -117,6 +121,6 @@ for file in glob.glob('*.csv'):
 for csv_file, csv_data in enhanced_dict.items():
     with open(csv_file, 'wb') as output:
             output.write(codecs.BOM_UTF8)
-            writer = csv.writer(output)
+            writer = csv.writer(output, quoting=csv.QUOTE_ALL,quotechar='"')
             writer.writerows(csv_data)
     print csv_file, 'has been created'
