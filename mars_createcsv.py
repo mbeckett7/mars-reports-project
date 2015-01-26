@@ -153,17 +153,18 @@ for report, lines in reports.items():
                                                 changed_lines[index + 1] += ['','',''] # Add blank ('Assigned To', 'Notes', and 'For Amy') columns
                                                 filtered_lines.append(changed_lines[index + 1])
                 elif report.startswith('R04'):
-                        # Keep only the 010 and the highlighted changed field
+                        # Keep only the 001 and the highlighted changed field
                         # Keep No Replacement Found rows but put in separate report
                         # Use 008 byte 32 to remove undifferentiated name records; imperfect since byte is often changed from 'b' when last name is removed
-                        filtered_lines.append(['Old/New','Ctrl No (010)','Tag','Ind','Heading','Assigned To','Notes','For Amy']) # Add header
+                        # Earlier versions of this script, used the 010 field instead of the 001; however, some records do not have an 010 field
+                        filtered_lines.append(['Old/New','Ctrl No (001)','Tag','Ind','Heading','Assigned To','Notes','For Amy']) # Add header
                         for record_lines in lines: #For each old/new record pair
                                 changes = 0 # counter for number of changed fields
                                 changed_lines = []
                                 for record_line in record_lines:
                                         if record_line[2] == '008':
                                                 undiff = record_line[4][32] # Get 008 byte 32 ('b' = undifferentiated name)
-                                        elif record_line[2] == '010':
+                                        elif record_line[2] == '001':
                                                 changed_lines.append(record_line)
                                         elif record_line[1] == 'chgfield':
                                                 changes += 1
