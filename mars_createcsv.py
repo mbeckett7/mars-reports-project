@@ -12,32 +12,30 @@ import sys
 import xlrd # pip install xlrd
 from pyquery import PyQuery as pq # pip install pyquery
 
-print sys.argv[0], 'is running ...' # produces status message, where sys.argv[0] is the script currently running
+print sys.argv[0], 'is running ...'
 
 # Dictionary of reports to be processed
 ##reports = {'R04':[],'R06 LC_Subjects':[], 'R07 LC_Subjects':[], 'R13':[], 'R14':[], 'R25':[]} # Six original project reports
-#reports = {'R00':[], 'R03_C1XX':[], 'R06 Series':[], 'R09 LC_Subjects': [], 'R11':[], 'R14':[], 'R39':[]} # Test reports for November 2014
-reports = {'R00':[], 'R03_C1XX':[], 'R06 Series':[], 'R09 LC_Subjects': [], 'R11':[], 'R14':[], 'R39':[]} # Production reports
+reports = {'R00':[], 'R03_C1XX':[], 'R06 Series':[], 'R09 LC_Subjects': [], 'R11':[], 'R14':[], 'R39':[]} # Test reports for November 2014
 
 # Locate most recent reports
-base_url = 'http://lms01.harvard.edu/mars-reports/' # top-level directory page
+base_url = 'http://lms01.harvard.edu/mars-reports/'
 
 r = requests.get(base_url)
 d = pq(r.content)
-# To Do: Add error checking in case top link is not a batch of monthly reports; currently assumes link contains date
-month_url = base_url + d('a')[0].text # Gets first linked url from page; change index number to get reports for an earlier month
+month_url = base_url + d('a')[0].text # Change index number to get reports for an earlier month
 report_date = datetime.datetime.strptime(d('a')[0].text[:-5], '%b-%y').strftime('%Y_%m') # Convert date in URL to numeric date for file naming later in script
 
 r = requests.get(month_url)
 d = pq(r.content)
 
-links = [] # list will get urls of all reports for most recent month
+links = []
 # Iteration was not working as expected with PyQuery object so items have been converted to a Python list
 for link in d('a').items():
         links.append(link.text())
 
 # Retrieve HTML pages or XLS files for each report
-for report in reports.keys(): # uses report names generated from the key values from the dictionary of reports
+for report in reports.keys():
         report_pages = []
         if report.startswith('R00'):
                 file_extension = '.xls'
@@ -49,15 +47,15 @@ for report in reports.keys(): # uses report names generated from the key values 
         if len(report_name) < 2:
                 report_name.append('') # If name is report number only, add a blank value for descriptive part to avoid error messages
 
-        for link in links: # match report from production report list to url(s) from list of links from monthly report page with correct extension
+        for link in links:
                 if link.startswith(report_name[0] + '_') and link.endswith(file_extension) and report_name[1] in link:
-                        r = requests.get(month_url + '/' + link) # get individual report page content
+                        r = requests.get(month_url + '/' + link)
                         if file_extension == '.xls': #PyQuery does not work with XLS files; use xlrd instead
-                                report_pages.append(xlrd.open_workbook(file_contents=r.content)) # append content to list of report page content
+                                report_pages.append(xlrd.open_workbook(file_contents=r.content))
                         else:
-                                report_pages.append(pq(r.content)) # append content to list of report page content
+                                report_pages.append(pq(r.content))
 
-        reports[report] = report_pages # Add all pages (from list of report page content) to reports dictionary
+        reports[report] = report_pages # Add all pages to reports dictionary
         # TO DO: Add caching to above code so multiple calls will not be needed if script fails  
 
 # Extract data from the report pages
@@ -123,7 +121,7 @@ for report, lines in reports.items():
                         filtered_lines.append(['Row No','Bib No','Tag','Ind','Unmatched Heading','Match %-1','Tag-1','Near Match-1',
                         'Authority-1','Match %-2','Tag-2','Near Match-2','Authority-2','Assigned To','Notes','For Amy']) # Add header
                         for line in lines:
-                                if float(line[5][:-1]) >= 90 or float(line[9][:-1]) >= 90: # For 90% or greater matches # TO DO: Do we need to change this to 99% here?
+                                if float(line[5][:-1]) >= 90 or float(line[9][:-1]) >= 90: # For 90% or greater matches
                                         del line[0] # Remove BSLW row number
                                         line += ['','',''] # Add blank ('Assigned To', 'Notes', and 'For Amy') columns
                                         filtered_lines.append(line)
@@ -186,7 +184,7 @@ for report, lines in reports.items():
                                         del line[1]
                                         line.insert(1,line[0].replace('-record','').title()) # Change HTML attribute to old/new
                                         del line[0]
-                                        line += ['','','']  # Add blank ('Assigned To', 'Notes', and 'For Amy') columns    # TO DO: is this creating extraneous columns?             
+                                        line += ['','','']  # Add blank ('Assigned To', 'Notes', and 'For Amy') columns                 
                 elif report.startswith('R06') and 'Series' in report:
                         # Keep rows with 'needs review' (i.e., not bold) data
                         # TO DO: Confirm that this report does not contain invalid or partly valid fields like other R06 reports
