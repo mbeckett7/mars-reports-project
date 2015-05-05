@@ -56,7 +56,7 @@ cataloger_by_language = {'ger':['John','Bruce', 'Mary Jane'], 'ita':['Anthony','
 bib_dict = {} # Dictionary of HOLLIS bib numbers -- example key/value: {'009151020': ['c', 'ita', 'MUS (ISHAM); MUS (HD)', '']}
 enhanced_dict = {} # Dictionary of enhanced data
 #music_reports = ['R00','R06','R07','R11', 'R28', 'R42', 'R119'] # List of reports to check for music headings pre-Feb 2015
-music_reports = ['R00','R06','R07','R11','R13','R14'] # List of reports to check for music headings Feb 2015 forward # Added R13 and R14 for March 2015 forward
+music_reports = ['R00','R06','R07','R11','R13','R14'] # List of reports to check for music headings Feb 2015 forward # Added R13 and R14 for March 2015 forward # NET holdings also checked here
 no_replace_reports = ['R04'] # List of reports to check for 'No Replacement Found' records
 no_enhance_reports = ['R03'] # List of reports that cannot or will not be enhanced
 # Authority reports without bib numbers cannot be enhanced by the HOLLIS Presto API
@@ -113,6 +113,7 @@ for file in glob.glob('*.csv'):
         reader = csv.reader(mars_csv)
 
         enhanced_rows = []
+        net_holding_rows = [] # for NET holding reports
         music_rows = [] # For music reports
         no_replace_rows = [] # For 'No Replacement Found' R04 report
         report_no = file[:4].replace('_','')
@@ -133,27 +134,35 @@ for file in glob.glob('*.csv'):
                     row[0] = row[0].replace('"', '')
                     if report_no == 'R00':
                         row[:-3] += ['LDR 06','Language','Libraries','Assigned To']
+                    elif report_no == 'R04':
+                        row += ['Assigned To']
                     else:
                         row += ['LDR 06','Language','Libraries','Assigned To']
                     row += ['Notes','For Amy','Time Spent']
                     if report_no == 'R00':
-                        row += ['Heading Matches Near Match?','# Headings Attached','Time Spent']
+                        row += ['Heading Matches Name 1 or 2?','# Headings Attached']
+                    if report_no == 'R06' or 'R07':
+                        row += ['# Headings Attached']
                     enhanced_rows.append(row)
+               
                 elif compare_col in bib_dict and bib_dict[compare_col] != '': # Check first column
-                    language = bib_dict[compare_col][1] #get language fron bib_dict
+                    language = bib_dict[compare_col][1] #get language from bib_dict
                     row[:-3] += bib_dict[compare_col] #add Hollis data to report row
-                    row[:-3] += [cataloger_assignment(report_no, language)] #add cataloger assignment based on language
+                    row[:-3] += [cataloger_assignment(report_no, language)] #add cataloger assignment based on language						
                     if report_no in music_reports: # For music reports, check for LDR 06 c, d, or j 
                         if bib_dict[compare_col][0] == 'c' or bib_dict[compare_col][0] == 'd' or bib_dict[compare_col][0] == 'j': 
                             music_rows.append(row) # Put in music report
                         elif any('libretto' in row_string.lower() for row_string in row): # check if any lower-cased string in the list = "libretto"
                             music_rows.append(row) # Put in music report 
+                        elif 'NET (' in row:
+                            net_holding_rows.append(row) # put in NET report
                         else:
-                            enhanced_rows.append(row) # Put in non-music report					
+                            enhanced_rows.append(row) # Put in non-music report				
                     else:
                         enhanced_rows.append(row)
+               
                 elif compare_col_2 in bib_dict and bib_dict[compare_col_2] != '': # Check second column
-                    language = bib_dict[compare_col_2][1] #get language fron bib_dict
+                    language = bib_dict[compare_col_2][1] #get language from bib_dict
                     row[:-3] += bib_dict[compare_col_2] #add Hollis data to report row
                     row[:-3] += [cataloger_assignment(report_no, language)] #add cataloger assignment based on language
                     if report_no in music_reports: # For music reports, check for LDR 06 c, d, or j
@@ -161,6 +170,8 @@ for file in glob.glob('*.csv'):
                             music_rows.append(row) # Put in music report
                         elif any('libretto' in row_string.lower() for row_string in row): # check if any lower-cased string in the list = "libretto"
                             music_rows.append(row) # Put in music report 
+                        elif 'NET (' in row:
+                            net_holding_rows.append(row) # put in NET report                       
                         else:
                             enhanced_rows.append(row) # Put in non-music report
                     else:
@@ -168,6 +179,7 @@ for file in glob.glob('*.csv'):
                 else:
                     row[:-3] += ['','','']
                     enhanced_rows.append(row)
+        
         elif report_no in no_replace_reports:
             for index, row in enumerate(reader):
                 if index == 0: # Get header row
@@ -180,15 +192,18 @@ for file in glob.glob('*.csv'):
                         no_replace_rows.append(row) # Add current (i.e., New) row to no replacement report
                     else:
                         enhanced_rows.append(row)
-
-        if enhanced_rows or music_rows or no_replace_rows:
+		
+        if enhanced_rows or music_rows or net_holding_rows or no_replace_rows:
             enhanced_dict[file[:-4] + '_enhanced.csv'] = enhanced_rows # Create enhanced report
 
+            if net_holding_rows: # create NET holding report
+                net_holding_rows.insert(0, enhanced_rows[0])
+                enhanced_dict[file[:-4] + '_NET_holdings.csv'] = net_holding_rows
             if music_rows: # Create music report
                 music_rows.insert(0, enhanced_rows[0])
                 enhanced_dict[file[:-4] + '_enhanced_music.csv'] = music_rows
 
-            if no_replace_rows: # Create music report
+            if no_replace_rows: # Create music report ??
                 no_replace_rows.insert(0, enhanced_rows[0])
                 enhanced_dict[file[:-4] + '_enhanced_noreplace.csv'] = no_replace_rows
             # TO DO: Row numbers are not correct for separated reports; this should be fixed if it matters to the processing team
