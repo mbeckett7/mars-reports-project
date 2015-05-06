@@ -17,8 +17,7 @@ print sys.argv[0], 'is running ...' # produces status message, where sys.argv[0]
 # Dictionary of reports to be processed
 ##reports = {'R04':[],'R06 LC_Subjects':[], 'R07 LC_Subjects':[], 'R13':[], 'R14':[], 'R25':[]} # Six original project reports
 ##reports = {'R00':[], 'R03_C1XX':[], 'R04':[], 'R06 LC_Subjects': [], 'R06 Series':[], 'R07 LC_Subjects': [], 'R09 LC_Subjects': [], 'R11':[], 'R14':[], 'R28 LC_Subjects':[], 'R39':[], 'R42':[], 'R119':[]} # Test reports for November 2014
-##reports = {'R00':[], 'R03_C1XX':[], 'R04':[], 'R06 LC_Subjects': [], 'R07 LC_Subjects': [], 'R09 LC_Subjects': [], 'R11':[], 'R13':[], 'R14':[], 'R25':[]} #  Reports for January 2015
-reports = {'R00':[], 'R03_C1XX':[], 'R04':[], 'R06 LC_Subjects': [], 'R07 LC_Subjects': [], 'R09 LC_Subjects': [], 'R11':[], 'R13':[], 'R14':[], 'R25':[], 'R87':[]} #  Reports for March 2015 (added R87)
+reports = {'R00':[], 'R03_C1XX':[], 'R04':[], 'R06 LC_Subjects': [], 'R07 LC_Subjects': [], 'R09 LC_Subjects': [], 'R11':[], 'R13':[], 'R14':[], 'R25':[], 'R87':[], 'R119':[]} #  Reports for April 2015 (added R119)
 
 
 # Locate most recent reports
