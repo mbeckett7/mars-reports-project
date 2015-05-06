@@ -45,7 +45,7 @@ import random # for assigning catalogers where language expertise overlaps
 bib_dict = {} # Dictionary of HOLLIS bib numbers -- example key/value: {'009151020': ['c', 'ita', 'MUS (ISHAM); MUS (HD)', '']}
 enhanced_dict = {} # Dictionary of enhanced data
 #music_reports = ['R00','R06','R07','R11', 'R28', 'R42', 'R119'] # List of reports to check for music headings pre-Feb 2015
-music_reports = ['R00','R06','R07','R11','R13','R14'] # List of reports to check for music headings Feb 2015 forward # Added R13 and R14 for March 2015 forward
+music_reports = ['R00','R06','R07','R11','R13','R14','R119'] # List of reports to check for music headings Feb 2015 forward # Added R13 and R14 for March 2015 forward # added R119 for April 2015 forward
 no_replace_reports = ['R04'] # List of reports to check for 'No Replacement Found' records
 no_enhance_reports = ['R03'] # List of reports that cannot or will not be enhanced
 # Authority reports without bib numbers cannot be enhanced by the HOLLIS Presto API
