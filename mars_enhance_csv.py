@@ -41,17 +41,6 @@ import time
 from lxml import html
 import random # for assigning catalogers where language expertise overlaps
 
-# reports in which catalogers are auto-assigned
-# random_assignment_reports = ['R00', 'R11'] 
-random_assignment_reports = ['R00', 'R03', 'R04', 'R06', 'R07', 'R25']
-language_assignment_reports = ['R13', 'R14']
-
-    
-# lists of catalogers for assigning report rows
-#cataloger_by_language = {'ger':['John','Beth','Bruce', 'Mary Jane'], 'ita':['Anthony','Beth','Karen','Mary Jane'], 'spa':['Isabel','Anthony'], 'por':['John','Isabel'], 'fre':['John','Anthony','Bruce','Mary Jane'], 'lat':['John','Bruce','Anthony'], 'chi':'Jia Lin', 'jpn':'Jia Lin', 'dut':['John','Mary Jane','Bruce'], 'dan':['John','Bruce'], 'nor':['John','Bruce'], 'swe':['John','Bruce'], 'ice':['John','Bruce'], 'eng':['John', 'Jia Lin', 'Mary Jane', 'Isabel', 'Anthony', 'Bruce', 'Karen','Michael']}
-cataloger_by_language = {'ger':['John','Bruce', 'Mary Jane'], 'ita':['Anthony','Mary Jane'], 'spa':['Isabel','Anthony'], 'por':['John','Isabel'], 'fre':['John','Anthony','Bruce','Mary Jane'], 'lat':['John','Bruce','Anthony'], 'chi':'Jia Lin', 'jpn':'Jia Lin', 'dut':['John','Mary Jane','Bruce'], 'dan':['John','Bruce'], 'nor':['John','Bruce'], 'swe':['John','Bruce'], 'ice':['John','Bruce'], 'eng':['John', 'Jia Lin', 'Mary Jane', 'Isabel', 'Anthony', 'Bruce', 'Michael']} #assignments for march 2015 reports
-
-
 
 bib_dict = {} # Dictionary of HOLLIS bib numbers -- example key/value: {'009151020': ['c', 'ita', 'MUS (ISHAM); MUS (HD)', '']}
 enhanced_dict = {} # Dictionary of enhanced data
