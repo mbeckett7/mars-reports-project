@@ -161,7 +161,7 @@ for report, lines in reports.items():
                         # Use 008 byte 32 to remove undifferentiated name records; imperfect since byte is often changed from 'b' when last name is removed
 						# Earlier versions of this script, used the 010 field instead of the 001; however, some records do not have an 010 field
                         # filtered_lines.append(['Old/New','Ctrl No (001)','Tag','Ind','Heading','Assigned To','Notes','For Amy']) # Add header with extra fields
-                        filtered_lines.append(['Old/New','Ctrl No (001)','Tag','Ind','Heading']) # Add header`
+                        filtered_lines.append(['Old/New','Ctrl No (010)','Tag','Ind','Heading']) # Add header`
                         for record_lines in lines: #For each old/new record pair
                                 changes = 0 # counter for number of changed fields
                                 changed_lines = []
