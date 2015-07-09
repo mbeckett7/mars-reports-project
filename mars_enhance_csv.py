@@ -7,7 +7,13 @@ def cataloger_assignment(report_no, language): #function for determining catalog
     language_assignment_reports = ['R13', 'R14']
     
     # lists of catalogers for assigning report rows
-    cataloger_by_language = {'ger':['John','Bruce', 'Mary Jane'], 'ita':['Anthony','Mary Jane'], 'spa':['Isabel','Anthony'], 'por':['John','Isabel'], 'fre':['John','Anthony','Bruce','Mary Jane'], 'lat':['John','Bruce','Anthony'], 'chi':'Jia Lin', 'jpn':'Jia Lin', 'dut':['John','Mary Jane','Bruce'], 'dan':['John','Bruce'], 'nor':['John','Bruce'], 'swe':['John','Bruce'], 'ice':['John','Bruce'], 'eng':['John', 'Jia Lin', 'Mary Jane', 'Isabel', 'Anthony', 'Bruce', 'Michael']} #assignments for march 2015 reports
+    cataloger_by_language = {'lat':['John','Bruce','Anthony'], 'ita':['Anthony','Mary Jane'], 'nap':['Anthony','Mary Jane'], 
+                             'spa':['Isabel','Anthony'], 'cat':['Isabel','Anthony'], 'glg':['Isabel','Anthony'], 'gag':['Isabel','Anthony'], 'por':['John','Isabel'],
+                             'fre':['John','Anthony','Bruce','Mary Jane'], 'frm':['John','Anthony','Bruce','Mary Jane'], 'fro':['John','Anthony','Bruce','Mary Jane'], 
+                             'ger':['John','Bruce', 'Mary Jane'], 'goh':['John','Bruce', 'Mary Jane'], 'gmh':['John','Bruce', 'Mary Jane'], 'gem':['John','Bruce', 'Mary Jane'], 
+                             'dut':['John','Mary Jane','Bruce'], 'dan':['John','Bruce'], 'nor':['John','Bruce'], 'swe':['John','Bruce'], 'ice':['John','Bruce'], 
+                             'chi':'Jia Lin', 'jpn':'Jia Lin', 'myn':'Isabel', 'afr':'Mary Jane', 
+                             'eng':['John', 'Jia Lin', 'Mary Jane', 'Isabel', 'Anthony', 'Bruce', 'Michael']} # current language assignments
 
     if report_no in random_assignment_reports:
         cataloger = random.choice(cataloger_by_language['eng'])
@@ -94,7 +100,7 @@ for bib, fields in bib_dict.items(): # bib, fields as key, value
         bib_dict[bib] = [ldr06, language, libraries] # Add HOLLIS data to dictionary of bib numbers
     else:
         bib_dict[bib] = ['','','']
-    time.sleep(1)
+    time.sleep(.2)
 
 # Add HOLLIS data to CSV files
 for file in glob.glob('*.csv'):
