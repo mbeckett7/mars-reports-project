@@ -7,13 +7,13 @@ def cataloger_assignment(report_no, language): #function for determining catalog
     language_assignment_reports = ['R13', 'R14']
     
     # lists of catalogers for assigning report rows
-    cataloger_by_language = {'lat':['John','Bruce','Anthony'], 'ita':['Anthony','Mary Jane'], 'nap':['Anthony','Mary Jane'], 
+    cataloger_by_language = {'lat':['John','Bruce','Anthony'], 'ita':['Anthony','Mary Jane','Karen'], 'nap':['Anthony','Mary Jane','Karen'], 
                              'spa':['Isabel','Anthony'], 'cat':['Isabel','Anthony'], 'glg':['Isabel','Anthony'], 'gag':['Isabel','Anthony'], 'por':['John','Isabel'],
                              'fre':['John','Anthony','Bruce','Mary Jane'], 'frm':['John','Anthony','Bruce','Mary Jane'], 'fro':['John','Anthony','Bruce','Mary Jane'], 
                              'ger':['John','Bruce', 'Mary Jane'], 'goh':['John','Bruce', 'Mary Jane'], 'gmh':['John','Bruce', 'Mary Jane'], 'gem':['John','Bruce', 'Mary Jane'], 
                              'dut':['John','Mary Jane','Bruce'], 'dan':['John','Bruce'], 'nor':['John','Bruce'], 'swe':['John','Bruce'], 'ice':['John','Bruce'], 
                              'chi':'Jia Lin', 'jpn':'Jia Lin', 'myn':'Isabel', 'afr':'Mary Jane', 
-                             'eng':['John', 'Jia Lin', 'Mary Jane', 'Isabel', 'Anthony', 'Bruce', 'Michael']} # current language assignments
+                             'eng':['John', 'Jia Lin', 'Mary Jane', 'Isabel', 'Anthony', 'Bruce', 'Michael','Karen']} # current language assignments
 
     if report_no in random_assignment_reports:
         cataloger = random.choice(cataloger_by_language['eng'])
