@@ -18,8 +18,8 @@ print sys.argv[0], 'is running ...' # produces status message, where sys.argv[0]
 ##reports = {'R04':[],'R06 LC_Subjects':[], 'R07 LC_Subjects':[], 'R13':[], 'R14':[], 'R25':[]} # Six original project reports
 ##reports = {'R00':[], 'R03_C1XX':[], 'R04':[], 'R06 LC_Subjects': [], 'R06 Series':[], 'R07 LC_Subjects': [], 'R09 LC_Subjects': [], 'R11':[], 'R14':[], 'R28 LC_Subjects':[], 'R39':[], 'R42':[], 'R119':[]} # Test reports for November 2014
 ##reports = {'R00':[], 'R03_C1XX':[], 'R04':[], 'R06 LC_Subjects': [], 'R07 LC_Subjects': [], 'R09 LC_Subjects': [], 'R11':[], 'R13':[], 'R14':[], 'R25':[], 'R87':[], 'R119':[]} #  Reports for April 2015 (added R119)
-reports = {'R03_C1XX':[], 'R04':[], 'R06 LC_Subjects': [], 'R07 LC_Subjects': [], 'R09 LC_Subjects': [], 'R11':[], 'R13':[], 'R14':[], 'R25':[], 'R87':[]} #  Current reports set - February 2016 forward
-
+##reports = {'R03_C1XX':[], 'R04':[], 'R06 LC_Subjects': [], 'R07 LC_Subjects': [], 'R09 LC_Subjects': [], 'R11':[], 'R13':[], 'R14':[], 'R25':[], 'R87':[]} #  Current reports set - February 2016 forward
+reports = {'R03_C1XX':[], 'R04':[], 'R13':[], 'R14':[]} #  Reports for processing - May 2016 forward
 
 # Locate most recent reports
 base_url = 'http://lms01.harvard.edu/mars-reports/' # top-level directory page
@@ -27,8 +27,8 @@ base_url = 'http://lms01.harvard.edu/mars-reports/' # top-level directory page
 r = requests.get(base_url)
 d = pq(r.content)
 # To Do: Add error checking in case top link is not a batch of monthly reports; currently assumes link contains date
-month_url = base_url + d('a')[0].text  # Gets first linked url from page; change index number to get reports for an earlier month
-report_date = datetime.datetime.strptime(d('a')[0].text[:-5], '%b-%y').strftime('%Y_%m') # Convert date in URL to numeric date for file naming later in script
+month_url = base_url + d('a')[10].text  # Gets first linked url from page; change index number to get reports for an earlier month
+report_date = datetime.datetime.strptime(d('a')[10].text[:-5], '%b-%y').strftime('%Y_%m') # Convert date in URL to numeric date for file naming later in script
 
 r = requests.get(month_url)
 d = pq(r.content)
@@ -108,7 +108,7 @@ for report, pages in reports.items(): # using report, pages for key, value
                                 for td in tr('td').items():
                                         for div in td('div').items():
                                                 tr_rows.append([td.attr['class'], div.attr['class']])
-                                                tr_rows[-1] += [div('span.tag').text()]
+                                                tr_rows[-1] += [div('span.tag').text()] #extact content based on html tag
                                                 tr_rows[-1] += [div('span.ind').text()]
                                                 tr_rows[-1] += [div('span.fielddata').text()]
                                 rows.append(tr_rows)
