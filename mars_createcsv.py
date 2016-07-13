@@ -10,6 +10,7 @@ import requests # pip install requests
 import StringIO
 import sys
 import xlrd # pip install xlrd
+import os
 from pyquery import PyQuery as pq # pip install pyquery
 
 print sys.argv[0], 'is running ...' # produces status message, where sys.argv[0] is the script currently running
@@ -19,7 +20,8 @@ print sys.argv[0], 'is running ...' # produces status message, where sys.argv[0]
 ##reports = {'R00':[], 'R03_C1XX':[], 'R04':[], 'R06 LC_Subjects': [], 'R06 Series':[], 'R07 LC_Subjects': [], 'R09 LC_Subjects': [], 'R11':[], 'R14':[], 'R28 LC_Subjects':[], 'R39':[], 'R42':[], 'R119':[]} # Test reports for November 2014
 ##reports = {'R00':[], 'R03_C1XX':[], 'R04':[], 'R06 LC_Subjects': [], 'R07 LC_Subjects': [], 'R09 LC_Subjects': [], 'R11':[], 'R13':[], 'R14':[], 'R25':[], 'R87':[], 'R119':[]} #  Reports for April 2015 (added R119)
 ##reports = {'R03_C1XX':[], 'R04':[], 'R06 LC_Subjects': [], 'R07 LC_Subjects': [], 'R09 LC_Subjects': [], 'R11':[], 'R13':[], 'R14':[], 'R25':[], 'R87':[]} #  Current reports set - February 2016 forward
-reports = {'R03_C1XX':[], 'R04':[], 'R13':[], 'R14':[]} #  Reports for processing - May 2016 forward
+#reports = {'R03_C1XX':[], 'R04':[], 'R13':[], 'R14':[]} #  Reports for processing - May 2016 forward
+reports = {'R13':[], 'R14':[]} #  Reports for processing - May 2016 forward
 
 # Locate most recent reports
 base_url = 'http://lms01.harvard.edu/mars-reports/' # top-level directory page
@@ -27,8 +29,16 @@ base_url = 'http://lms01.harvard.edu/mars-reports/' # top-level directory page
 r = requests.get(base_url)
 d = pq(r.content)
 # To Do: Add error checking in case top link is not a batch of monthly reports; currently assumes link contains date
-month_url = base_url + d('a')[10].text  # Gets first linked url from page; change index number to get reports for an earlier month
-report_date = datetime.datetime.strptime(d('a')[10].text[:-5], '%b-%y').strftime('%Y_%m') # Convert date in URL to numeric date for file naming later in script
+month_url = base_url + d('a')[0].text  # Gets first linked url from page; change index number to get reports for an earlier month
+report_date = datetime.datetime.strptime(d('a')[0].text[:-5], '%b-%y').strftime('%Y_%m') # Convert date in URL to numeric date for file naming later in script
+
+# Create new working directory and change to that directory. If directory already exists for that date, change to overflow directory
+try:
+    os.mkdir('C:\\Users\\beckett\\MARS Filtered Reports\\MARS Filtered Reports ' + report_date)
+    os.chdir('C:\\Users\\beckett\\MARS Filtered Reports\\MARS Filtered Reports ' + report_date)
+except:
+    os.chdir('C:\\Users\\beckett\\MARS Filtered Reports\\MARS Filtered Reports Overflow')
+    print report_date + ' directory already exists! Reports saved in: ' + os.getcwd()                
 
 r = requests.get(month_url)
 d = pq(r.content)
@@ -246,7 +256,7 @@ for report, lines in reports.items():
                                 else:
                                         filtered_lines[line_index].insert(0, str(line_index))
 
-              # Create CSV File
+              # Create CSV File                
                 out_file = report.replace(' ','_') + '_' + report_date + '.csv'
                 with open(out_file,'wb') as output:
                         output.write(codecs.BOM_UTF8)
