@@ -20,7 +20,6 @@ print sys.argv[0], 'is running ...' # produces status message, where sys.argv[0]
 ##reports = {'R00':[], 'R03_C1XX':[], 'R04':[], 'R06 LC_Subjects': [], 'R06 Series':[], 'R07 LC_Subjects': [], 'R09 LC_Subjects': [], 'R11':[], 'R14':[], 'R28 LC_Subjects':[], 'R39':[], 'R42':[], 'R119':[]} # Test reports for November 2014
 ##reports = {'R00':[], 'R03_C1XX':[], 'R04':[], 'R06 LC_Subjects': [], 'R07 LC_Subjects': [], 'R09 LC_Subjects': [], 'R11':[], 'R13':[], 'R14':[], 'R25':[], 'R87':[], 'R119':[]} #  Reports for April 2015 (added R119)
 ##reports = {'R03_C1XX':[], 'R04':[], 'R06 LC_Subjects': [], 'R07 LC_Subjects': [], 'R09 LC_Subjects': [], 'R11':[], 'R13':[], 'R14':[], 'R25':[], 'R87':[]} #  Current reports set - February 2016 forward
-#reports = {'R03_C1XX':[], 'R04':[], 'R13':[], 'R14':[]} #  Reports for processing - May 2016 forward
 reports = {'R03_C1XX':[], 'R04':[], 'R13':[], 'R14':[]} #  Reports for processing - May 2016 forward
 
 # Locate most recent reports
@@ -227,6 +226,14 @@ for report, lines in reports.items():
                         for line in lines:
                                 if line[1] == '650': # Only keep 650s
                                         filtered_lines.append(line)
+                
+                elif report.startswith('R14'):
+                        #filter out 246 fields and 830 fields w/o $v
+                        filtered_lines.append(['Row No','Bib No','Tag','Ind','Field Data']) # Add header
+                        for line in lines:
+                                if not (line[1] == '246' or ((line[1] == '830' or line[1] == '440') and '$v' not in line[3])):
+                                        filtered_lines.append(line)
+                            
                 elif report.startswith('R25'):
                         # Only keep rows that have an unrecognized $z
                         filtered_lines.append(['Row No','Bib No','Tag','Ind','Field Data','Unrecognized $z']) # Add header
