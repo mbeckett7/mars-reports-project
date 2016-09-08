@@ -22,7 +22,7 @@ def cataloger_assignment(report_no, language): #function for determining catalog
                              'spa':'Pam', 'cat':'Pam', 'glg':'Pam', 'gag':'Pam',
                              'fre':'Rebecca', 'frm':'Rebecca', 'fro':'Rebecca', 
                              'ger':['Rebecca','Pam'], 'goh':['Rebecca','Pam'], 'gmh':['Rebecca','Pam'], 'gem':['Rebecca','Pam'],
-                             'eng':['Rebecca', 'Pam', 'Ann', 'Delana']} # current language assignments
+                             'eng':['Rebecca', 'Pam', 'Ann', 'Delana' ]} # current language assignments
 
 
 
@@ -39,7 +39,7 @@ def cataloger_assignment(report_no, language): #function for determining catalog
                 cataloger = random.choice(cataloger_by_language['eng'])
             #print report_no + ' ' + language + ' ' + cataloger + ' (non-random)'
     else:
-        cataloger = '' 
+        cataloger = random.choice(cataloger_by_language['eng']) # assigning all other languages randomly
         #print report_no + ' ' + language + ' no assignment'
         
     return cataloger #to do: determine why this sometimes throws an error if cataloger is not defined as blank at beginning of function
