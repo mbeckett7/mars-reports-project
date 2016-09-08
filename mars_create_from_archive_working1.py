@@ -18,6 +18,7 @@ import StringIO
 import sys
 import xlrd # pip install xlrd
 from pyquery import PyQuery as pq # pip install pyquery
+import os
 
 print sys.argv[0], 'is running ...' # produces status message, where sys.argv[0] is the script currently running
 
@@ -29,7 +30,7 @@ print sys.argv[0], 'is running ...' # produces status message, where sys.argv[0]
 #reports = {'R03_C1XX':[], 'R04':[], 'R13':[], 'R14':[]} #  Reports for processing - May 2016 forward
 
 # To Do: Add error checking in case top link is not a batch of monthly reports; currently assumes link contains date
-for month_index in range (21,33): #change range to select different months
+for month_index in range (0,1): #change range to select different months
 
     reports = {'R13':[], 'R14':[]} #  Reports for processing - May 2016 forward
     base_url = 'http://lms01.harvard.edu/mars-reports/' # top-level directory page
@@ -39,6 +40,14 @@ for month_index in range (21,33): #change range to select different months
 
     month_url = base_url + d('a')[month_index].text  # Gets first linked url from page; change index number to get reports for an earlier month
     report_date = datetime.datetime.strptime(d('a')[month_index].text[:-5], '%b-%y').strftime('%Y_%m') # Convert date in URL to numeric date for file naming later in script
+    
+    # Create new working directory and change to that directory. If directory already exists for that date, change to overflow directory
+    try:
+        os.mkdir('C:\\Users\\beckett\\MARS Filtered Reports\\MARS Filtered Reports ' + report_date)
+        os.chdir('C:\\Users\\beckett\\MARS Filtered Reports\\MARS Filtered Reports ' + report_date)
+    except:
+        os.chdir('C:\\Users\\beckett\\MARS Filtered Reports\\MARS Filtered Reports Overflow')
+        print report_date + ' directory already exists! Reports saved in: ' + os.getcwd()                    
     
     r = requests.get(month_url)
     d = pq(r.content)
