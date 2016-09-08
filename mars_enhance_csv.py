@@ -7,13 +7,24 @@ def cataloger_assignment(report_no, language): #function for determining catalog
     language_assignment_reports = ['R13', 'R14']
     
     # lists of catalogers for assigning report rows
-    cataloger_by_language = {'lat':['John','Bruce','Anthony'], 'ita':['Anthony','Mary Jane','Karen'], 'nap':['Anthony','Mary Jane','Karen'], 
-                             'spa':['Isabel','Anthony'], 'cat':['Isabel','Anthony'], 'glg':['Isabel','Anthony'], 'gag':['Isabel','Anthony'], 'por':['John','Isabel'],
-                             'fre':['John','Anthony','Bruce','Mary Jane'], 'frm':['John','Anthony','Bruce','Mary Jane'], 'fro':['John','Anthony','Bruce','Mary Jane'], 
-                             'ger':['John','Bruce', 'Mary Jane'], 'goh':['John','Bruce', 'Mary Jane'], 'gmh':['John','Bruce', 'Mary Jane'], 'gem':['John','Bruce', 'Mary Jane'], 
-                             'dut':['John','Mary Jane','Bruce'], 'dan':['John','Bruce'], 'nor':['John','Bruce'], 'swe':['John','Bruce'], 'ice':['John','Bruce'], 
-                             'chi':'Jia Lin', 'jpn':'Jia Lin', 'myn':'Isabel', 'afr':'Mary Jane', 
-                             'eng':['John', 'Jia Lin', 'Mary Jane', 'Isabel', 'Anthony', 'Bruce', 'Michael','Karen']} # current language assignments
+#==============================================================================
+#     cataloger_by_language = {'lat':['John','Bruce','Anthony'], 'ita':['Anthony','Mary Jane','Karen'], 'nap':['Anthony','Mary Jane','Karen'], 
+#                              'spa':['Isabel','Anthony'], 'cat':['Isabel','Anthony'], 'glg':['Isabel','Anthony'], 'gag':['Isabel','Anthony'], 'por':['John','Isabel'],
+#                              'fre':['John','Anthony','Bruce','Mary Jane'], 'frm':['John','Anthony','Bruce','Mary Jane'], 'fro':['John','Anthony','Bruce','Mary Jane'], 
+#                              'ger':['John','Bruce', 'Mary Jane'], 'goh':['John','Bruce', 'Mary Jane'], 'gmh':['John','Bruce', 'Mary Jane'], 'gem':['John','Bruce', 'Mary Jane'], 
+#                              'dut':['John','Mary Jane','Bruce'], 'dan':['John','Bruce'], 'nor':['John','Bruce'], 'swe':['John','Bruce'], 'ice':['John','Bruce'], 
+#                              'chi':'Jia Lin', 'jpn':'Jia Lin', 'myn':'Isabel', 'afr':'Mary Jane', 
+#                              'eng':['John', 'Jia Lin', 'Mary Jane', 'Isabel', 'Anthony', 'Bruce', 'Michael','Karen']} # current language assignments
+#==============================================================================
+
+    # lists of catalogers for assigning report rows
+    cataloger_by_language = {'ita':'Rebecca', 'nap':'Rebecca', 
+                             'spa':'Pam', 'cat':'Pam', 'glg':'Pam', 'gag':'Pam',
+                             'fre':'Rebecca', 'frm':'Rebecca', 'fro':'Rebecca', 
+                             'ger':['Rebecca','Pam'], 'goh':['Rebecca','Pam'], 'gmh':['Rebecca','Pam'], 'gem':['Rebecca','Pam'],
+                             'eng':['Rebecca', 'Pam', 'Ann', 'Delana']} # current language assignments
+
+
 
     if report_no in random_assignment_reports:
         cataloger = random.choice(cataloger_by_language['eng'])
@@ -61,7 +72,8 @@ os.chdir('C:\\Users\\beckett\\MARS Filtered Reports\\MARS Filtered Reports ' + r
 bib_dict = {} # Dictionary of HOLLIS bib numbers -- example key/value: {'009151020': ['c', 'ita', 'MUS (ISHAM); MUS (HD)', '']}
 enhanced_dict = {} # Dictionary of enhanced data
 #music_reports = ['R00','R06','R07','R11', 'R28', 'R42', 'R119'] # List of reports to check for music headings pre-Feb 2015
-music_reports = ['R00','R06','R07','R11','R13','R14','R119'] # List of reports to check for music headings Feb 2015 forward # Added R13 and R14 for March 2015 forward # added R119 for April 2015 forward
+#music_reports = ['R00','R06','R07','R11','R13','R14','R119'] # List of reports to check for music headings Feb 2015 forward # Added R13 and R14 for March 2015 forward # added R119 for April 2015 forward
+music_reports = ['R00','R06','R11','R13','R14','R119'] #removed R07 for enhancement of R07 and R30 series reports
 no_replace_reports = ['R04'] # List of reports to check for 'No Replacement Found' records
 no_enhance_reports = ['R03','R04'] # List of reports that cannot or will not be enhanced
 # Authority reports without bib numbers cannot be enhanced by the HOLLIS Presto API
