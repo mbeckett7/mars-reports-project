@@ -23,7 +23,8 @@ def cataloger_assignment(report_no, language): #function for determining catalog
                              'spa':['Pam', 'Ann'], 'cat':['Pam', 'Ann'], 'glg':['Pam', 'Ann'], 'gag':['Pam', 'Ann'],
                              'fre':['Rebecca', 'Ann'], 'frm':['Rebecca', 'Ann'], 'fro':['Rebecca', 'Ann'], 
                              'ger':['Rebecca','Pam'], 'goh':['Rebecca','Pam'], 'gmh':['Rebecca','Pam'], 'gem':['Rebecca','Pam'],
-                             'eng':['Rebecca', 'Pam', 'Ann', 'Delana' ]} # current language assignments
+                             'eng':['Rebecca', 'Pam', 'Ann', 'Delana' ],
+                             'other':['Delana', 'Delana', 'Delana', 'Delana', 'Ann', 'Ann', 'Pam', 'Pam', 'Rebecca']} # current language assignments
 
 
 
@@ -37,10 +38,12 @@ def cataloger_assignment(report_no, language): #function for determining catalog
             elif type(cataloger_by_language[language]) is list:
                 cataloger = random.choice(cataloger_by_language[language])
             else: 
-                cataloger = random.choice(cataloger_by_language['eng'])
+                cataloger = random.choice(cataloger_by_language['other'])
             #print report_no + ' ' + language + ' ' + cataloger + ' (non-random)'
+        else:
+            cataloger = random.choice(cataloger_by_language['other'])
     else:
-        cataloger = random.choice(cataloger_by_language['eng']) # assigning all other languages randomly
+        cataloger = random.choice(cataloger_by_language['other']) # assigning all other languages randomly
         #print report_no + ' ' + language + ' no assignment'
         
     return cataloger #to do: determine why this sometimes throws an error if cataloger is not defined as blank at beginning of function
