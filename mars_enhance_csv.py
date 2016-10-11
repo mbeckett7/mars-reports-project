@@ -3,7 +3,8 @@ def cataloger_assignment(report_no, language): #function for determining catalog
     
     cataloger = ''
     # reports in which catalogers are auto-assigned
-    random_assignment_reports = ['R00', 'R03', 'R04', 'R06', 'R07', 'R25'] 
+    #random_assignment_reports = ['R00', 'R03', 'R04', 'R06', 'R07', 'R25'] #
+    random_assignment_reports = [] #
     language_assignment_reports = ['R13', 'R14']
     
     # lists of catalogers for assigning report rows
@@ -19,8 +20,8 @@ def cataloger_assignment(report_no, language): #function for determining catalog
 
     # lists of catalogers for assigning report rows
     cataloger_by_language = {'ita':'Rebecca', 'nap':'Rebecca', 
-                             'spa':'Pam', 'cat':'Pam', 'glg':'Pam', 'gag':'Pam',
-                             'fre':'Rebecca', 'frm':'Rebecca', 'fro':'Rebecca', 
+                             'spa':['Pam', 'Ann'], 'cat':['Pam', 'Ann'], 'glg':['Pam', 'Ann'], 'gag':['Pam', 'Ann'],
+                             'fre':['Rebecca', 'Ann'], 'frm':['Rebecca', 'Ann'], 'fro':['Rebecca', 'Ann'], 
                              'ger':['Rebecca','Pam'], 'goh':['Rebecca','Pam'], 'gmh':['Rebecca','Pam'], 'gem':['Rebecca','Pam'],
                              'eng':['Rebecca', 'Pam', 'Ann', 'Delana' ]} # current language assignments
 
