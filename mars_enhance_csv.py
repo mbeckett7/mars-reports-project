@@ -78,6 +78,7 @@ enhanced_dict = {} # Dictionary of enhanced data
 #music_reports = ['R00','R06','R07','R11', 'R28', 'R42', 'R119'] # List of reports to check for music headings pre-Feb 2015
 #music_reports = ['R00','R06','R07','R11','R13','R14','R119'] # List of reports to check for music headings Feb 2015 forward # Added R13 and R14 for March 2015 forward # added R119 for April 2015 forward
 music_reports = ['R00','R06','R11','R13','R14','R119'] #removed R07 for enhancement of R07 and R30 series reports
+net_reports = ['R13','R14'] # List of reports to check for NET-only records
 no_replace_reports = ['R04'] # List of reports to check for 'No Replacement Found' records
 no_enhance_reports = ['R03','R04'] # List of reports that cannot or will not be enhanced
 # Authority reports without bib numbers cannot be enhanced by the HOLLIS Presto API
@@ -135,6 +136,7 @@ for file in glob.glob('*.csv'):
 
         enhanced_rows = []
         music_rows = [] # For music reports
+        net_rows = [] # for net-only rows
         no_replace_rows = [] # For 'No Replacement Found' R04 report
         report_no = file[:4].replace('_','')
 
@@ -169,6 +171,11 @@ for file in glob.glob('*.csv'):
                             music_rows.append(row) # Put in music report
                         elif any('libretto' in row_string.lower() for row_string in row): # check if any lower-cased string in the list = "libretto"
                             music_rows.append(row) # Put in music report 
+                        elif report_no in net_reports:
+                            if 'NET' in bib_dict[compare_col][2]:
+                                net_rows.append(row)
+                            else:
+                                enhanced_rows.append(row)                        
                         else:
                             enhanced_rows.append(row) # Put in non-music report					
                     else:
@@ -182,6 +189,9 @@ for file in glob.glob('*.csv'):
                             music_rows.append(row) # Put in music report
                         elif any('libretto' in row_string.lower() for row_string in row): # check if any lower-cased string in the list = "libretto"
                             music_rows.append(row) # Put in music report 
+                        elif report_no in net_reports:
+                            if 'NET' in bib_dict[compare_col_2][2]:
+                                net_rows.append(row)                        
                         else:
                             enhanced_rows.append(row) # Put in non-music report
                     else:
@@ -202,12 +212,16 @@ for file in glob.glob('*.csv'):
                     else:
                         enhanced_rows.append(row)
 
-        if enhanced_rows or music_rows or no_replace_rows:
+        if enhanced_rows or music_rows or net_rows or no_replace_rows:
             enhanced_dict[file[:-4] + '_enhanced.csv'] = enhanced_rows # Create enhanced report
 
             if music_rows: # Create music report
                 music_rows.insert(0, enhanced_rows[0])
                 enhanced_dict[file[:-4] + '_enhanced_music.csv'] = music_rows
+                
+            if net_rows: # Create music report
+                net_rows.insert(0, enhanced_rows[0])
+                enhanced_dict[file[:-4] + '_enhanced_net.csv'] = net_rows
 
             if no_replace_rows: # Create music report
                 no_replace_rows.insert(0, enhanced_rows[0])
