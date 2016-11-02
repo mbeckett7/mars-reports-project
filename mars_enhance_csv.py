@@ -158,7 +158,7 @@ for file in glob.glob('*.csv'):
                         row[:-3] += ['LDR 06','Language','Libraries','Assigned To']
                     else:
                         row += ['LDR 06','Language','Libraries','Assigned To']
-                    row += ['Notes','For Amy','Time Spent']
+                    row += ['No change needed?','Notes','For Amy','Time Spent']
                     if report_no == 'R00':
                         row += ['Heading Matches Near Match?','# Headings Attached','Time Spent']
                     enhanced_rows.append(row)
@@ -192,10 +192,10 @@ for file in glob.glob('*.csv'):
                         elif report_no in net_reports:
                             if 'NET' in bib_dict[compare_col_2][2]:
                                 net_rows.append(row)                        
+                            else:
+                                enhanced_rows.append(row) # Put in non-music report
                         else:
-                            enhanced_rows.append(row) # Put in non-music report
-                    else:
-                        enhanced_rows.append(row)
+                            enhanced_rows.append(row)
                 else:
                     row[:-3] += ['','','']
                     enhanced_rows.append(row)
