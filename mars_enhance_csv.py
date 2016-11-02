@@ -172,7 +172,7 @@ for file in glob.glob('*.csv'):
                         elif any('libretto' in row_string.lower() for row_string in row): # check if any lower-cased string in the list = "libretto"
                             music_rows.append(row) # Put in music report 
                         elif report_no in net_reports:
-                            if 'NET' in bib_dict[compare_col][2]:
+                            if ('NET' in bib_dict[compare_col][2]) and (';' not in bib_dict[compare_col][2]):
                                 net_rows.append(row)
                             else:
                                 enhanced_rows.append(row)                        
@@ -190,7 +190,7 @@ for file in glob.glob('*.csv'):
                         elif any('libretto' in row_string.lower() for row_string in row): # check if any lower-cased string in the list = "libretto"
                             music_rows.append(row) # Put in music report 
                         elif report_no in net_reports:
-                            if 'NET' in bib_dict[compare_col_2][2]:
+                            if ('NET' in bib_dict[compare_col_2][2]) and (';' not in bib_dict[compare_col_2][2]):
                                 net_rows.append(row)                        
                             else:
                                 enhanced_rows.append(row) # Put in non-music report
