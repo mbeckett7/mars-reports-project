@@ -33,10 +33,10 @@ report_date = datetime.datetime.strptime(d('a')[0].text[:-5], '%b-%y').strftime(
 
 # Create new working directory and change to that directory. If directory already exists for that date, change to overflow directory
 try:
-    os.mkdir('C:\\Users\\beckett\\MARS Filtered Reports\\MARS Filtered Reports ' + report_date)
-    os.chdir('C:\\Users\\beckett\\MARS Filtered Reports\\MARS Filtered Reports ' + report_date)
+    os.mkdir('I:\MARS\MARS Reports\MARS Filtered Reports\\MARS Filtered Reports ' + report_date)
+    os.chdir('I:\MARS\MARS Reports\MARS Filtered Reports\\MARS Filtered Reports ' + report_date)
 except:
-    os.chdir('C:\\Users\\beckett\\MARS Filtered Reports\\MARS Filtered Reports Overflow')
+    os.chdir('I:\MARS\MARS Reports\MARS Filtered Reports\\MARS Filtered Reports Overflow')
     print report_date + ' directory already exists! Reports saved in: ' + os.getcwd()                
 
 r = requests.get(month_url)

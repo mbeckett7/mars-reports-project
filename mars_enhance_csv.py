@@ -71,7 +71,7 @@ r = requests.get(base_url)
 d = pq(r.content)
 month_url = base_url + d('a')[0].text  # Gets first linked url from page; change index number to get reports for an earlier month
 report_date = datetime.datetime.strptime(d('a')[0].text[:-5], '%b-%y').strftime('%Y_%m') # Convert date in URL to numeric date for file naming later in script
-os.chdir('C:\\Users\\beckett\\MARS Filtered Reports\\MARS Filtered Reports ' + report_date)
+os.chdir('I:\MARS\MARS Reports\MARS Filtered Reports\\MARS Filtered Reports ' + report_date)
 
 bib_dict = {} # Dictionary of HOLLIS bib numbers -- example key/value: {'009151020': ['c', 'ita', 'MUS (ISHAM); MUS (HD)', '']}
 enhanced_dict = {} # Dictionary of enhanced data
@@ -235,10 +235,10 @@ for file in glob.glob('*.csv'):
             
 # Create new working directory and change to that directory. If directory already exists for that date, change to overflow directory
 try:
-    os.mkdir('C:\\Users\\beckett\\MARS Filtered Reports\\MARS Enhanced Reports ' + report_date)
-    os.chdir('C:\\Users\\beckett\\MARS Filtered Reports\\MARS Enhanced Reports ' + report_date)
+    os.mkdir('I:\MARS\MARS Reports\MARS Enhanced Reports\\MARS Enhanced Reports ' + report_date)
+    os.chdir('I:\MARS\MARS Reports\MARS Enhanced Reports\\MARS Enhanced Reports ' + report_date)
 except:
-    os.chdir('C:\\Users\\beckett\\MARS Filtered Reports\\MARS Enhanced Reports ' + report_date)
+    os.chdir('I:\MARS\MARS Reports\MARS Enhanced Reports\\MARS Enhanced Reports ' + report_date)
     print report_date + ' directory already exists! Enhanced reports may be duplicated in ' + os.getcwd()  
 
 for csv_file, csv_data in enhanced_dict.items():
